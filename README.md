@@ -60,6 +60,12 @@ kibana
 
 启动成功后浏览器访问`http://localhost:5601`, 用户名: elastic，密码：H5VzhJP0txg4Lm9EMSZp
 
+启动`APM`：
+
+```bash
+apm-server -e
+```
+
 ## 问题
 
 1.  Mac OSX 下使用`brew`安装`elasticsearch`, 并且`elasticsearch`安装`x-pack`插件后，`setup-passwords`命令行工具的路径?
@@ -83,14 +89,50 @@ PASSWORD elastic = H5VzhJP0txg4Lm9EMSZp
 
 2.  `kibana.yml`文件路径?
 
-`/usr/local/Cellar/kibana/6.2.4/config/kibana.yml`
+OSX 下通过`brew`安装: `/usr/local/Cellar/kibana/6.2.4/config/kibana.yml`
 
 3.  启动`elasticsearch`服务后，使用`curl`访问`localhost:9200`出现`curl: (52) Empty reply from server`
 
 https://stackoverflow.com/questions/50638174/elasticsearch-cant-access-localhost9200-via-curl/50639089#50639089
 
+4.  `APM`配置文件路径
+
+OSX 下通过`brew`安装: `/usr/local/etc/apm-server/apm-server.yml`
+
+5.  启动`apm-server`时，报 401 错误
+
+```bash
+2018-06-05T15:48:15.448+0800	ERROR	pipeline/output.go:74	Failed to connect: 401 Unauthorized: {"error":{"root_cause":[{"type":"security_exception","reason":"missing authentication token for REST request [/]","header":{"WWW-Authenticate":"Basic realm=\"security\" charset=\"UTF-8\""}}],"type":"security_exception","reason":"missing authentication token for REST request [/]","header":{"WWW-Authenticate":"Basic realm=\"security\" charset=\"UTF-8\""}},"status":401}
+```
+
+解决方案：
+
+打开`APM`配置文件`/usr/local/etc/apm-server/apm-server.yml`,将`username`和`password`注释打开，并修改`password`密码为问题 1 中生成的密码
+
+```yml
+#================================ Outputs =====================================
+
+# Configure what output to use when sending the data collected by the beat.
+
+#-------------------------- Elasticsearch output ------------------------------
+output.elasticsearch:
+  # Array of hosts to connect to.
+  hosts: ["localhost:9200"]
+
+  # Optional protocol and basic auth credentials.
+  #protocol: "https"
+  username: "elastic"
+  password: "H5VzhJP0txg4Lm9EMSZp"
+```
+
 ## 参考链接
+
+https://elasticsearch.cn/
+
+https://www.elastic.co/guide/en/kibana/current/index.html
 
 https://www.elastic.co/start
 
 https://yq.aliyun.com/articles/285815?spm=a2c0j.9528745.934977.1.21e95a36op6lBZ
+
+https://www.elastic.co/downloads/apm
