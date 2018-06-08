@@ -125,6 +125,10 @@ output.elasticsearch:
   password: "H5VzhJP0txg4Lm9EMSZp"
 ```
 
+## 待办
+
+- [ ] APM node.js agent - Source Map Support 代码演示
+
 ## 参考链接
 
 https://elasticsearch.cn/
@@ -135,4 +139,8 @@ https://www.elastic.co/start
 
 https://yq.aliyun.com/articles/285815?spm=a2c0j.9528745.934977.1.21e95a36op6lBZ
 
+https://www.elastic.co/solutions/apm
+
 https://www.elastic.co/downloads/apm
+
+https://github.com/nswbmw/node-in-debugging/blob/master/5.2%20Elastic%20APM.md

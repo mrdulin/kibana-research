@@ -9,13 +9,21 @@ const apm = require('elastic-apm-node').start({
   // instrument: 一个布尔值，默认值：true, 指定代理是否应收集应用程序的性能指标。active和instrument配置都必须为true才可以生效
 
   ignoreUrls: ['/logging/ping']
+  // captureBody: 'all'
 });
 
 const express = require('express');
-const { logging, filterHttpHeaders } = require('./routes');
+const graphqlHTTP = require('express-graphql');
+const bodyParser = require('body-parser');
+
+const { logging, filterHttpHeaders, form } = require('./routes');
+const { schema, root } = require('./graphql');
 
 const app = express();
 const port = 3000;
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
@@ -23,6 +31,18 @@ app.get('/', (req, res) => {
 
 app.use('/logging', logging(apm));
 app.use('/filterHttpHeaders', filterHttpHeaders(apm));
+app.use('/form', form(apm));
+app.use(
+  '/graphql',
+  graphqlHTTP(req => {
+    // console.log('body: ', req.body);
+    return {
+      schema,
+      rootValue: root,
+      graphiql: true
+    };
+  })
+);
 
 app.listen(port, () => {
   console.log(`Server is listening on http://localhost:${port}`);
